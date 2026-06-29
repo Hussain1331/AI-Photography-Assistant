@@ -1,50 +1,66 @@
 import cv2
-import time
+
+from camera.manager import CameraManager
 from pose.detector import PoseDetector
-from pose.detector import PoseDetector
+from face.face_mesh import FaceMeshDetector
 
-detector = PoseDetector()
+camera = CameraManager()
 
-cap = cv2.VideoCapture(0)
+pose_detector = PoseDetector()
+face_detector = FaceMeshDetector()
 
-prev_time = 0
 
 while True:
-    success, frame = cap.read()
-    frame, results = detector.detect(frame)
-    if results.pose_landmarks:
-        total = len(results.pose_landmarks.landmark)
 
-        cv2.putText(
-            frame,
-            f"Landmarks: {total}",
-            (20, 80),
-            cv2.FONT_HERSHEY_SIMPLEX,
-            0.8,
-            (255, 255, 0),
-            2
-        )
-    if not success:
+    frame, fps = camera.read()
+
+    if frame is None:
         break
 
-    current_time = time.time()
-    fps = 1 / (current_time - prev_time) if prev_time else 0
-    prev_time = current_time
+    frame, pose_results = pose_detector.detect(frame)
+    frame, face_results = face_detector.detect(frame)
+
+    pose_status = "Detected" if pose_results.pose_landmarks else "Not Detected"
+
+    face_status = (
+        "Detected"
+        if face_results.multi_face_landmarks
+        else "Not Detected"
+    )
 
     cv2.putText(
         frame,
-        f"FPS: {int(fps)}",
+        f"FPS : {fps}",
         (20, 40),
         cv2.FONT_HERSHEY_SIMPLEX,
-        1,
+        0.8,
         (0, 255, 0),
-        2
+        2,
+    )
+
+    cv2.putText(
+        frame,
+        f"Pose : {pose_status}",
+        (20, 80),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (255, 255, 0),
+        2,
+    )
+
+    cv2.putText(
+        frame,
+        f"Face : {face_status}",
+        (20, 120),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (0, 255, 255),
+        2,
     )
 
     cv2.imshow("AI Photography Assistant", frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
-cap.release()
-cv2.destroyAllWindows()
+camera.release()
