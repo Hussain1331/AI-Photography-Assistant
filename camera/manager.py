@@ -22,6 +22,13 @@ class CameraManager:
 
         self.prev_time = current_time
 
+        if fps > 25:
+            fps_color = (0, 255, 0)
+        elif fps > 15:
+            fps_color = (0, 255, 255)
+        else:
+            fps_color = (0, 0, 255)
+
         return frame, int(fps)
 
     def release(self):
