@@ -1,15 +1,18 @@
 import cv2
-
+from score.pose_score import PoseScorer
 from camera.manager import CameraManager
 from pose.detector import PoseDetector
 from face.face_mesh import FaceMeshDetector
 from face.analyzer import FaceAnalyzer
 from recommendations.coach import PoseCoach
+from pose.analyzer import PoseAnalyzer
 
+pose_analyzer = PoseAnalyzer()
 camera = CameraManager()
 face_analyzer = FaceAnalyzer()
 pose_detector = PoseDetector()
 face_detector = FaceMeshDetector()
+pose_scorer = PoseScorer()
 coach = PoseCoach()
 
 mirror = True
@@ -30,10 +33,15 @@ while True:
     head_status = "--"
     smile_status = "--"
     suggestion = "--"
+    if pose_results.pose_landmarks:
 
+        pose_analysis = pose_analyzer.analyze(
+
+            pose_results.pose_landmarks.landmark
+
+        )
     if face_results.multi_face_landmarks:
-        face_status = "Detected"
-
+        face_status = "Detected"  
         landmarks = face_results.multi_face_landmarks[0].landmark
         analysis = face_analyzer.analyze(landmarks)
 
@@ -43,7 +51,13 @@ while True:
         
         # Duplicate line aur variable hata kar seedhe suggestion li
         suggestion = coach.get_suggestion(analysis)
+        pose_score = pose_scorer.calculate_score(
 
+            analysis,
+
+            pose_results.pose_landmarks is not None
+
+        )
     if fps >= 25:
         fps_color = (0, 255, 0)
     elif fps >= 15:
@@ -108,7 +122,25 @@ while True:
                   (20, 320), 
                   cv2.FONT_HERSHEY_SIMPLEX, 
                   0.8, smile_color, 2)
-    
+    score_color = (
+                (0,255,0)
+                if pose_score >= 90
+                else
+                (0,255,255)
+                if pose_score >= 70
+                else
+                (0,0,255)
+            )
+
+    cv2.putText(
+                frame,
+                f"Pose Score : {pose_score}/100",
+                (20,360),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                score_color,
+                2
+            )
     # 9. Brand/Version Text
     cv2.putText(frame, "VisionPose AI v0.6", (830, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
