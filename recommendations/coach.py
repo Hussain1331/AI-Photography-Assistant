@@ -24,3 +24,13 @@ class PoseCoach:
             suggestion = "Perfect! Hold Still 📸"
 
         return "Perfect! Hold Still"
+
+    def get_pose_suggestion(self, pose_analysis):
+
+        if pose_analysis["left_arm_status"] == "Straight":
+            return "Relax your left arm"
+
+        if pose_analysis["right_arm_status"] == "Straight":
+            return "Relax your right arm"
+
+        return "Good upper body pose"

@@ -6,6 +6,7 @@ from face.face_mesh import FaceMeshDetector
 from face.analyzer import FaceAnalyzer
 from recommendations.coach import PoseCoach
 from pose.analyzer import PoseAnalyzer
+from recommendations.pose_matcher import PoseMatcher
 
 pose_analyzer = PoseAnalyzer()
 camera = CameraManager()
@@ -14,7 +15,7 @@ pose_detector = PoseDetector()
 face_detector = FaceMeshDetector()
 pose_scorer = PoseScorer()
 coach = PoseCoach()
-
+matcher = PoseMatcher()
 mirror = True
 
 while True:
@@ -33,13 +34,33 @@ while True:
     head_status = "--"
     smile_status = "--"
     suggestion = "--"
+    pose_suggestion = "--"
+    current_pose = "--"
+    match_score = 0
     if pose_results.pose_landmarks:
 
         pose_analysis = pose_analyzer.analyze(
-
             pose_results.pose_landmarks.landmark
-
         )
+
+        # Pose Coach Suggestion
+        pose_suggestion = coach.get_pose_suggestion(
+            pose_analysis
+        )
+
+        # Match with Pose Library
+        match = matcher.compare(
+            pose_analysis
+        )
+
+        current_pose = match["pose"]
+        match_score = match["score"]
+
+        # Debug Prints
+        print(pose_analysis)
+        print(match)
+        print(pose_suggestion)
+        
     if face_results.multi_face_landmarks:
         face_status = "Detected"  
         landmarks = face_results.multi_face_landmarks[0].landmark
