@@ -7,7 +7,7 @@ from face.analyzer import FaceAnalyzer
 from recommendations.coach import PoseCoach
 from pose.analyzer import PoseAnalyzer
 from recommendations.pose_matcher import PoseMatcher
-
+from recommendations.pose_recommender import PoseRecommender
 pose_analyzer = PoseAnalyzer()
 camera = CameraManager()
 face_analyzer = FaceAnalyzer()
@@ -16,6 +16,7 @@ face_detector = FaceMeshDetector()
 pose_scorer = PoseScorer()
 coach = PoseCoach()
 matcher = PoseMatcher()
+recommender = PoseRecommender()
 mirror = True
 
 while True:
@@ -36,6 +37,7 @@ while True:
     suggestion = "--"
     pose_suggestion = "--"
     current_pose = "--"
+    shoulder_status = "--"
     match_score = 0
     if pose_results.pose_landmarks:
 
@@ -43,20 +45,22 @@ while True:
             pose_results.pose_landmarks.landmark
         )
 
-        # Pose Coach Suggestion
+        shoulder_status = pose_analysis["shoulder"]
+
         pose_suggestion = coach.get_pose_suggestion(
             pose_analysis
         )
 
-        # Match with Pose Library
         match = matcher.compare(
             pose_analysis
         )
 
         current_pose = match["pose"]
         match_score = match["score"]
+        recommended = recommender.recommend(
+            current_pose
+        )
 
-        # Debug Prints
         print(pose_analysis)
         print(match)
         print(pose_suggestion)
@@ -162,8 +166,27 @@ while True:
                 score_color,
                 2
             )
-    # 9. Brand/Version Text
+    cv2.putText(
+        frame,
+        f"Shoulders : {shoulder_status}",
+        (20, 400),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.8,
+        (255,255,0),
+        2
+    )
+    cv2.putText(
+    frame,
+    f"Next Pose : {recommended[0]}",
+    (20,440),
+    cv2.FONT_HERSHEY_SIMPLEX,
+    0.8,
+    (0,255,255),
+    2
+    )
+        # 9. Brand/Version Text
     cv2.putText(frame, "VisionPose AI v0.6", (830, 35), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+    
 
     # --- Window and Keys ---
     cv2.imshow("AI Photography Assistant", frame)

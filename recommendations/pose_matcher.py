@@ -31,17 +31,33 @@ class PoseMatcher:
         for pose in self.poses:
 
             difference = (
+
                 abs(
                     pose_analysis["left_arm_angle"]
                     - pose["left_arm_angle"]
                 )
+
                 +
+
                 abs(
                     pose_analysis["right_arm_angle"]
                     - pose["right_arm_angle"]
                 )
-            )
 
+                +
+
+                abs(
+                    pose_analysis["left_leg_angle"]
+                    - pose["left_leg_angle"]
+                )
+
+                +
+
+                abs(
+                    pose_analysis["right_leg_angle"]
+                    - pose["right_leg_angle"]
+                )
+            )
             if difference < best_difference:
 
                 best_difference = difference

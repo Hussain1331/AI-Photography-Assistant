@@ -2,35 +2,26 @@ class PoseCoach:
 
     def get_suggestion(self, analysis):
 
-        if not analysis["eyes_open"]:
-            return "Open your eyes"
+            if not analysis["eyes_open"]:
+                return "Open your eyes"
 
-        if analysis["head"] != "Straight":
-            return "Look at the camera"
-        if not analysis["eyes_open"]:
+            elif analysis["head"] != "Straight":
+                return "Look at the camera"
 
-            suggestion = "Open your eyes"
+            elif not analysis["smile"]:
+                return "Try smiling 😊"
 
-        elif analysis["head"] != "Straight":
-
-            suggestion = "Look at the camera"
-
-        elif not analysis["smile"]:
-
-            suggestion = "Try smiling 😊"
-
-        else:
-
-            suggestion = "Perfect! Hold Still 📸"
-
-        return "Perfect! Hold Still"
+            return "Perfect! Hold Still 📸"
 
     def get_pose_suggestion(self, pose_analysis):
 
-        if pose_analysis["left_arm_status"] == "Straight":
+        if pose_analysis["shoulder"] != "Level":
+            return "Keep your shoulders level"
+
+        if pose_analysis["left_arm"] == "Straight":
             return "Relax your left arm"
 
-        if pose_analysis["right_arm_status"] == "Straight":
+        if pose_analysis["right_arm"] == "Straight":
             return "Relax your right arm"
 
         return "Good upper body pose"

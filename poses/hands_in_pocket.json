@@ -1,5 +1,9 @@
 {
-    "name": "Hands In Pocket",
-    "left_arm_angle": 115,
-    "right_arm_angle": 115
+    "name": "Casual Standing",
+
+    "left_arm_angle": 170,
+    "right_arm_angle": 170,
+
+    "left_leg_angle": 175,
+    "right_leg_angle": 175
 }
