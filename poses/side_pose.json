@@ -1,9 +1,8 @@
 {
-    "name": "Casual Standing",
-
-    "left_arm_angle": 170,
-    "right_arm_angle": 170,
-
-    "left_leg_angle": 175,
-    "right_leg_angle": 175
+    "name": "Side Pose",
+    "left_arm_angle": 120.0,
+    "right_arm_angle": 165.0,
+    "left_leg_angle": 170.0,
+    "right_leg_angle": 172.0,
+    "next_pose": ["Casual Standing", "Hands in Pocket"]
 }

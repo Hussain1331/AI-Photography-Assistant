@@ -1,11 +1,8 @@
 {
     "name": "Casual Standing",
-
-    "left_arm_angle": 170,
-    "right_arm_angle": 170,
-
-    "left_leg_angle": 175,
-    "right_leg_angle": 175,
-
-    "description": "Natural standing pose for portraits."
+    "left_arm_angle": 170.0,
+    "right_arm_angle": 165.0,
+    "left_leg_angle": 178.0,
+    "right_leg_angle": 179.0,
+    "next_pose": ["Hands in Pocket", "Arms Crossed"]
 }

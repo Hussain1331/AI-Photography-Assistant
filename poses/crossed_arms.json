@@ -1,9 +1,8 @@
 {
-    "name": "Casual Standing",
-
-    "left_arm_angle": 170,
-    "right_arm_angle": 170,
-
-    "left_leg_angle": 175,
-    "right_leg_angle": 175
+    "name": "Arms Crossed",
+    "left_arm_angle": 55.0,
+    "right_arm_angle": 60.0,
+    "left_leg_angle": 176.0,
+    "right_leg_angle": 176.0,
+    "next_pose": ["Side Pose", "Casual Standing"]
 }
