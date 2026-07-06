@@ -1,8 +1,9 @@
 {
     "name": "Hands in Pocket",
+    "category": "Sitting/Cafe Vibe",
     "left_arm_angle": 95.0,
     "right_arm_angle": 100.0,
     "left_leg_angle": 175.0,
     "right_leg_angle": 175.0,
-    "next_pose": ["Arms Crossed", "Side Pose"]
+    "next_pose": ["Arms Crossed"]
 }

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionPose AI Pro Suite</title>
+    <!-- Tailwind CSS Engine CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body {
+            background: radial-gradient(circle at top right, #1a153a 0%, #0a0718 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen font-sans">
+
+    <!-- Navbar/Header Area -->
+    <header class="border-b border-white/10 py-5 px-8 flex justify-between items-center glass-panel sticky top-0 z-50">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl">📸</span>
+            <h1 class="text-xl font-bold tracking-tight">VisionPose <span class="text-emerald-400">Studio Engine</span></h1>
+        </div>
+        <div class="flex items-center gap-2 bg-black/40 px-4 py-1.5 rounded-full border border-white/5">
+            <div class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+            <span class="text-xs font-mono uppercase tracking-wider text-slate-400">AI Node Live</span>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Workspace Layout Grid -->
+    <main class="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        
+        <!-- Left: Massive Video Pipeline Stream Frame -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass-panel p-3 rounded-2xl overflow-hidden shadow-2xl relative group">
+                <img src="{{ url_for('video_feed') }}" class="w-full h-auto rounded-xl border border-white/5 object-cover" alt="AI Feed Pipeline">
+                <!-- Framing Alert Banner Top Overlay -->
+                <div id="ui-alert-banner" class="absolute top-6 left-1/2 -translate-x-1/2 hidden bg-red-500/90 text-white px-6 py-2 rounded-full font-bold text-sm tracking-wide shadow-xl uppercase border border-red-400 animate-bounce">
+                    ⚠️ Position Warning
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Modern Context Control Side Deck -->
+        <div class="space-y-6">
+            
+            <!-- Matrix Component 1: Real-time Score System -->
+            <div class="glass-panel p-6 rounded-2xl shadow-xl">
+                <h3 class="text-sm font-semibold tracking-wider uppercase text-slate-400 mb-4">Live Posture Evaluation</h3>
+                <div class="flex items-baseline gap-2">
+                    <span id="ui-score" class="text-6xl font-extrabold text-emerald-400 tracking-tighter">00</span>
+                    <span class="text-slate-500 font-medium">% match</span>
+                </div>
+                <div class="w-full bg-white/5 h-2 rounded-full mt-4 overflow-hidden border border-white/5">
+                    <div id="ui-score-bar" class="bg-emerald-400 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Matrix Component 2: Environment Sensing Layer -->
+            <div class="glass-panel p-6 rounded-2xl shadow-xl space-y-4">
+                <div>
+                    <h4 class="text-xs font-semibold tracking-wider uppercase text-slate-400 mb-1">Detected Scene Context</h4>
+                    <div id="ui-scene-badge" class="inline-block bg-amber-500/10 text-amber-400 border border-amber-500/30 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wide">
+                        Scanning Environment
+                    </div>
+                </div>
+                <p id="ui-scene-suggestion" class="text-sm text-slate-400 leading-relaxed">System mapping backdrop markers...</p>
+            </div>
+
+            <!-- Matrix Component 3: Live Coach Feedback Grid -->
+            <div class="glass-panel p-6 rounded-2xl shadow-xl space-y-4">
+                <div>
+                    <h4 class="text-xs font-semibold tracking-wider uppercase text-slate-400 mb-1">AI Director Feedback</h4>
+                    <p id="ui-pose-target" class="text-lg font-bold text-white mb-2">Target: Processing Body</p>
+                </div>
+                <div class="bg-emerald-500/5 border-l-4 border-emerald-400 p-4 rounded-r-lg text-sm text-emerald-300 font-medium">
+                    🗣️ <span id="ui-coach-text">Waiting for user target positioning matrix...</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Async AJAX Fetch JS Loop to pull JSON metrics channel dynamically without reloading -->
+    <script>
+        setInterval(() => {
+            fetch('/get_metrics')
+                .then(response => response.json())
+                .then(data => {
+                    // Update Text Values smoothly
+                    document.getElementById('ui-score').innerText = String(data.pose_score).padStart(2, '0');
+                    document.getElementById('ui-score-bar').style.width = data.pose_score + '%';
+                    document.getElementById('ui-scene-badge').innerText = "⚡ " + data.scene_category;
+                    document.getElementById('ui-scene-suggestion').innerText = data.scene_suggestion;
+                    document.getElementById('ui-pose-target').innerText = "Target Pose: " + data.current_pose;
+                    document.getElementById('ui-coach-text').innerText = data.coach_suggestion;
+
+                    // Handler for dynamic boundary framing overlay alert
+                    const alertBanner = document.getElementById('ui-alert-banner');
+                    if (data.framing_alert) {
+                        alertBanner.innerText = data.framing_alert;
+                        alertBanner.classList.remove('hidden');
+                    } else {
+                        alertBanner.classList.add('hidden');
+                    }
+                });
+        }, 200); // 5 FPS data updates keep UI snappy without clogging connection arrays
+    </script>
+</body>
+</html>

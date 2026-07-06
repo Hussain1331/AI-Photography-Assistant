@@ -49,8 +49,6 @@ class FaceAnalyzer:
 
         smile_ratio = self.smile_score(landmarks)
 
-        # Dynamic adjustments: Kuch log natural 4.0 ratio par bina smile ke hote h
-        # Isliye condition real smile curves ko notice karne ke liye check karegi
         is_smiling = smile_ratio > 4.2 or (smile_ratio < 2.2 and smile_ratio > 0)
 
         return {
